@@ -1,10 +1,8 @@
 {
-  "name": "AngularJS-Toaster",
+  "name": "angularjs-toaster",
   "version": "2.2.0",
   "main": [
-    "toaster.js",
-    "toaster.css",
-    "toaster.scss"
+    "toaster.js"
   ],
   "ignore": [
     "**/.*",
