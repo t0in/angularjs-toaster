@@ -39,6 +39,7 @@
             // 'toast-bottom-left', 'toast-bottom-center', 'toast-bottom-right',
             'title-class': 'toast-title',
             'message-class': 'toast-message',
+            'img-class': 'toast-image',
             'prevent-duplicates': false,
             'mouseover-timer-stop': true // stop timeout on mouseover and restart timer on mouseout
         }
@@ -47,6 +48,7 @@
                 '<div id="toast-container" ng-class="[config.position, config.animation]">' +
                     '<div ng-repeat="toaster in toasters" class="toast" ng-class="toaster.type" ng-click="click($event, toaster)" ng-mouseover="stopTimer(toaster)" ng-mouseout="restartTimer(toaster)">' +
                         '<div ng-if="toaster.showCloseButton" ng-click="click($event, toaster, true)" ng-bind-html="toaster.closeHtml"></div>' +
+                        '<div ng-if="toaster.img" ng-class="config.img"><img data-ng-src="{{toaster.img}}"></div>' +
                         '<div ng-class="config.title">{{toaster.title}}</div>' +
                         '<div ng-class="config.message" ng-switch on="toaster.bodyOutputType">' +
                         '<div ng-switch-when="html" ng-bind-html="toaster.body"></div>' +
@@ -74,13 +76,14 @@
                     return Guid;
                 }());
 
-                this.pop = function(type, title, body, timeout, bodyOutputType, clickHandler, toasterId, showCloseButton, toastId, onHideCallback) {
+                this.pop = function(type, title, body, timeout, bodyOutputType, clickHandler, toasterId, showCloseButton, toastId, onHideCallback, img) {
                     if (angular.isObject(type)) {
                         var params = type; // Enable named parameters as pop argument
                         this.toast = {
                             type: params.type,
                             title: params.title,
                             body: params.body,
+                            img: params.img,
                             timeout: params.timeout,
                             bodyOutputType: params.bodyOutputType,
                             clickHandler: params.clickHandler,
@@ -98,6 +101,7 @@
                             type: type,
                             title: title,
                             body: body,
+                            img: img,
                             timeout: timeout,
                             bodyOutputType: bodyOutputType,
                             clickHandler: clickHandler,
@@ -133,12 +137,13 @@
                 }
 
                 function createTypeMethod(toasterType) {
-                    return function(title, body, timeout, bodyOutputType, clickHandler, toasterId, showCloseButton, toastId, onHideCallback) {
+                    return function(title, body, timeout, bodyOutputType, clickHandler, toasterId, showCloseButton, toastId, onHideCallback, img) {
                         if (angular.isString(title)) {
                             return this.pop(
                                 toasterType,
                                 title,
                                 body,
+                                img,
                                 timeout,
                                 bodyOutputType,
                                 clickHandler,
@@ -282,6 +287,7 @@
                             toasterId: mergedConfig['toaster-id'],
                             position: mergedConfig['position-class'],
                             title: mergedConfig['title-class'],
+                            img: mergedConfig['img-class'],
                             message: mergedConfig['message-class'],
                             tap: mergedConfig['tap-to-dismiss'],
                             closeButton: mergedConfig['close-button'],
